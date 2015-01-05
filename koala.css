@@ -16,6 +16,8 @@ body {
   user-select: none;
 
   -ms-touch-action: none;
+
+  background-color: #222;
 }
 
 div {
