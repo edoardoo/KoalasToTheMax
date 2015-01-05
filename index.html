@@ -10,6 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="google" content="notranslate">
     <title>Scratch and win</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script type="text/javascript">var version = '1.9.4';</script>
     <script type="text/javascript" src="polyfill/polyfill.js?1.9.4"></script>
     <script type="text/javascript" src="polyfill/Blob.js?1.9.4"></script>
@@ -316,8 +317,58 @@
             // Fall though
             return basicLoad(location);
           }
+          function totalImages(){
+            var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+            var firstDate = new Date(2009,03,19);
+            var secondDate = new Date();
 
-          var parse = parseUrl(location);
+            var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
+
+            //Exactly, the difference between the number of posts and days is 69 ...
+            diffDays = diffDays+69;
+            return diffDays;
+          }
+
+          function getRandomId(){
+            return Math.floor(Math.random() * totalImages()) + 1;
+          }
+
+          function getBonjourUrl(){
+            var imgUrl = null;
+            var time = elapsedTime = new Date();
+            var timeout = 10000;
+            //var randomId = getRandomId();
+            var randomId = 2157;
+            while( imgUrl == null && (elapsedTime - time) < timeout){
+              elapsedTime = new Date();
+              $.ajax({
+                url:"https://query.yahooapis.com/v1/public/yql?q=select%20src%20from%20html%20where%20url%3D'http%3A%2F%2Fbonjourmadame.fr%2Fpage%2F"+randomId+"'%20and%20xpath%3D'%2F%2Fdiv%5Bcontains(%40class%2C%20%22photo%22)%5D%2Fimg'%20limit%201&format=json",
+                dataType: 'json',
+                async: false,
+                success:  function(data){
+                            imgUrl = data.query.results.img.src;
+                          },
+                error: function(error){
+                  console.log(error);
+                }
+              });
+              console.log(imgUrl);
+            }
+              return imgUrl;
+          }
+          function buildParseObject(url){
+            
+            parseObject = {
+              file: url, 
+              shownFile: url
+            }
+            return parseObject;
+          }
+
+          //var parse = parseUrl(location);
+          var parse = buildParseObject(getBonjourUrl());
+          console.log(parse);
+
           if (!parse) return;
           var file = parse.file;
           window.shownFile = parse.shownFile;
