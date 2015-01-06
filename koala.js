@@ -117,7 +117,7 @@ var koala = {
         .attr('cy',   function(d) { return d.parent.y; })
         .attr('r',    function(d) { return d.parent.size / 2; })
         .attr('fill', function(d) { return String(d.parent.rgb); })
-        .attr('fill-opacity', 0.68)
+        .attr('fill-opacity', 0.90)
           .transition()
           .duration(300);
     }
@@ -135,7 +135,7 @@ var koala = {
   // Main code
   var vis,
       maxSize = 512,
-      minSize = 4,
+      minSize = 2,
       dim = maxSize / minSize;
 
   koala.loadImage = function(imageData) {
