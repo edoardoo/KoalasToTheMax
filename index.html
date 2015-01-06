@@ -51,6 +51,8 @@
  Edited by <a href="http://edoardoo.com">edoardoo</a>
        with random <a href="http://bonjourmadame.fr">bonjourmadame's</a>
        images. 
+                    &nbsp; / &nbsp;
+                    <a href="/">RANDOM!</a>
     </div>
 
     <script type="text/javascript">
@@ -259,20 +261,28 @@
               shownFile: location.protocol + '//' + location.host + location.pathname + file
             };
           }
+          function sanitizeAndRandomUrl(location, idx){
+
+            location.href = '//' + location.host + location.pathname + '?' + utf8_to_b64(getBonjourUrl());
+          }
 
           function parseUrl(location) {
             var href = location.href;
             var idx, param, file;
 
             idx = href.indexOf('?');
+
             if (idx === -1 || idx === href.length - 1) {
-              return basicLoad(location); // Case 1
+              //return basicLoad(location); // Case 1 non c'e' niente.
+              sanitizeAndRandomUrl(location);
             }
 
             param = href.substr(idx + 1);
+            // console.dir(param);
+
             if (!/^[a-z0-9+\/]+=*$/i.test(param)) {
               // Does not look base64
-              goToHidden(location, param);
+              sanitizeAndRandomUrl(location);
               return null;
             }
 
@@ -337,12 +347,12 @@
             var imgUrl = null;
             var time = elapsedTime = new Date();
             var timeout = 10000;
-            //var randomId = getRandomId();
-            var randomId = 2157;
+            var randomId = getRandomId();
+            //var randomId = 2157;
             while( imgUrl == null && (elapsedTime - time) < timeout){
               elapsedTime = new Date();
               $.ajax({
-                url:"https://query.yahooapis.com/v1/public/yql?q=select%20src%20from%20html%20where%20url%3D'http%3A%2F%2Fbonjourmadame.fr%2Fpage%2F"+randomId+"'%20and%20xpath%3D'%2F%2Fdiv%5Bcontains(%40class%2C%20%22photo%22)%5D%2Fimg'%20limit%201&format=json",
+                url:"https://query.yahooapis.com/v1/public/yql?q=select%20src%20from%20html%20where%20url%3D'http%3A%2F%2Fbonjourmadame.fr%2Fpage%2F"+randomId+"'%20and%20xpath%3D'%2F%2Fdiv%5Bcontains(%40class%2C%20%22photo%22)%5D%20%7C%20%2F%2Fimg'%20limit%201&format=json",
                 dataType: 'json',
                 async: false,
                 success:  function(data){
@@ -356,17 +366,9 @@
             }
               return imgUrl;
           }
-          function buildParseObject(url){
-            
-            parseObject = {
-              file: url, 
-              shownFile: url
-            }
-            return parseObject;
-          }
+          
+          var parse = parseUrl(location);
 
-          //var parse = parseUrl(location);
-          var parse = buildParseObject(getBonjourUrl());
           console.log(parse);
 
           if (!parse) return;
