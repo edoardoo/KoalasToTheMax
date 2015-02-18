@@ -138,6 +138,7 @@ var koala = {
       minSize = 4,
       dim = maxSize / minSize;
 
+
   koala.loadImage = function(imageData) {
     // Create a canvas for image data resizing and extraction
     var canvas = document.createElement('canvas').getContext('2d');
@@ -200,7 +201,7 @@ var koala = {
     // Build up successive nodes by grouping
     var layer, prevLayer = finestLayer;
     var c1, c2, c3, c4, currentLayer = 0;
-    while (size < maxSize) {
+    while (size < maxSize ) {
       dim /= 2;
       size = size * 2;
       layer = array2d(dim, dim);
